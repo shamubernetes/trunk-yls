@@ -21,5 +21,9 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/kiliantyler/trunk-yls"
 Issues = "https://github.com/kiliantyler/trunk-yls/issues"
-[project.scripts]
-trunk-yls = "yls-check:main"
+
+[tool.setuptools]
+packages = ["trunk_yls"]
+
+[tool.setuptools.package-dir]
+trunk_yls = "src/trunk_yls"
