@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 from ruamel.yaml import YAML
 
 
-def echo_message(line, char_start, char_end, message, code):
+def echo_message(line, message, code):
 
     return {
         "message": message,
