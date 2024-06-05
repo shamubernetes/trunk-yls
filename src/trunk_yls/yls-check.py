@@ -5,6 +5,7 @@ import os
 import json
 from ruamel.yaml import YAML
 
+
 def echo_message(line, message, code):
     return {
         "message": message,
@@ -22,11 +23,13 @@ def echo_message(line, message, code):
         }
     }
 
+
 def read_yaml_documents(file_path):
     yaml = YAML()
     with open(file_path, 'r') as file:
         documents = list(yaml.load_all(file))
     return documents
+
 
 def get_top_comment(document):
     if hasattr(document, 'ca') and document.ca.comment and document.ca.comment[1]:
@@ -84,6 +87,7 @@ def main():
 
     if messages:
         print(json.dumps(messages, indent=2))
+
 
 if __name__ == "__main__":
     main()
