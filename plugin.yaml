@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://static.trunk.io/pub/trunk-yaml-schema.json
+version: 0.1
+lint:
+  definitions:
+  - name: yls-check
+    files: [yaml]
+    description: A formatter yaml files
+    commands:
+    - run: ${plugin}/yls-check.sh ${target}
+      success_codes: [0, 1]
+      output: lsp_json
