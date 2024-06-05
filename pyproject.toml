@@ -23,7 +23,7 @@ Homepage = "https://github.com/kiliantyler/trunk-yls"
 Issues = "https://github.com/kiliantyler/trunk-yls/issues"
 
 [project.scripts]
-trunk-yls = "trunk_yls.yls-check:main"
+trunk-yls = "trunk_yls.yls_check:main"
 
 [tool.setuptools]
 packages = ["trunk_yls"]
