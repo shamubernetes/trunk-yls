@@ -17,11 +17,11 @@ def echo_message(line, char_start, char_end, message, code):
         "range": {
             "start": {
                 "line": line,
-                "character": char_start
+                "character": 0
             },
             "end": {
                 "line": line,
-                "character": char_end
+                "character": 0
             }
         }
     }
@@ -89,22 +89,20 @@ def main():
             top_comment = get_top_comment(doc)
             if top_comment is None:
                 messages.append(
-                    echo_message(line_num, 0, 0,
+                    echo_message(line_num,
                                  "No YLS Comment found beginning document",
                                  "no-comment"))
                 continue
 
             if not top_comment.startswith("# yaml-language-server"):
                 messages.append(
-                    echo_message(line_num, 0, 0,
+                    echo_message(line_num,
                                  "YLS not found in top comment", "no-yls"))
                 continue
 
             if '$schema=' not in top_comment:
-                startLen = len("# yaml-language-server")
-                endLen = len(top_comment)
                 messages.append(
-                    echo_message(line_num, startLen, endLen,
+                    echo_message(line_num,
                                  "Schema not found in top comment",
                                  "no-schema"))
                 continue
@@ -113,7 +111,7 @@ def main():
 
             if domain in excluded_domains:
                 messages.append(
-                    echo_message(line_num, 32, len(schema_part)+32,
+                    echo_message(line_num,
                                  f"{domain} is not allowed in the schema",
                                  "wrong-schema"))
                 continue
