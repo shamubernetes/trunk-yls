@@ -3,10 +3,13 @@
 import sys
 import os
 import json
+import argparse
+from urllib.parse import urlparse
 from ruamel.yaml import YAML
 
 
-def echo_message(line, message, code):
+def echo_message(line, char_start, char_end, message, code):
+
     return {
         "message": message,
         "code": code,
@@ -14,11 +17,11 @@ def echo_message(line, message, code):
         "range": {
             "start": {
                 "line": line,
-                "character": 0
+                "character": char_start
             },
             "end": {
                 "line": line,
-                "character": 0
+                "character": char_end
             }
         }
     }
@@ -37,12 +40,38 @@ def get_top_comment(document):
     return None
 
 
+def read_config(config_path):
+    yaml = YAML()
+    with open(config_path, 'r') as file:
+        config = yaml.load(file)
+    return config.get('excluded_domains', [])
+
+
+def extract_domain_from_schema(schema):
+    parsed_url = urlparse(schema)
+    return parsed_url.netloc
+
+
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: {} <file1> <file2> ...".format(sys.argv[0]))
+    parser = argparse.ArgumentParser(description='Process YAML files.')
+    parser.add_argument('--config', type=str, help='Path to the config file')
+    parser.add_argument('files',
+                        metavar='file',
+                        type=str,
+                        nargs='+',
+                        help='YAML files to process')
+    args = parser.parse_args()
+
+    excluded_domains = []
+    config_file = args.config if args.config else 'trunk-yls.yaml'
+
+    if os.path.isfile(config_file):
+        excluded_domains = read_config(config_file)
+    elif args.config:
+        print(f"Config file not found: {config_file}")
         sys.exit(1)
 
-    file_paths = sys.argv[1:]
+    file_paths = args.files
     messages = []
 
     for file_path in file_paths:
@@ -60,29 +89,33 @@ def main():
             top_comment = get_top_comment(doc)
             if top_comment is None:
                 messages.append(
-                    echo_message(line_num,
+                    echo_message(line_num, 0, 0,
                                  "No YLS Comment found beginning document",
                                  "no-comment"))
                 continue
 
             if not top_comment.startswith("# yaml-language-server"):
                 messages.append(
-                    echo_message(line_num, "YLS not found in top comment",
-                                 "no-yls"))
+                    echo_message(line_num, 0, 0,
+                                 "YLS not found in top comment", "no-yls"))
                 continue
 
             if '$schema=' not in top_comment:
+                startLen = len("# yaml-language-server")
+                endLen = len(top_comment)
                 messages.append(
-                    echo_message(line_num, "Schema not found in top comment",
+                    echo_message(line_num, startLen, endLen,
+                                 "Schema not found in top comment",
                                  "no-schema"))
                 continue
+            schema_part = top_comment.split('$schema=')[1].strip()
+            domain = extract_domain_from_schema(schema_part)
 
-            if "kubernetes-schemas" in top_comment:
+            if domain in excluded_domains:
                 messages.append(
-                    echo_message(
-                        line_num,
-                        "kubernetes-schemas is not allowed in the schema",
-                        "wrong-schema"))
+                    echo_message(line_num, 32, len(schema_part)+32,
+                                 f"{domain} is not allowed in the schema",
+                                 "wrong-schema"))
                 continue
 
     if messages:
