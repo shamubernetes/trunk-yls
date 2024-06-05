@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[project]
+name = "trunk-yls"
+version = "0.0.1"
+authors = [
+  { name="Kilian Tyler", email="trunk-yls@ktyler.me" },
+]
+description = "Personal yaml-language-server check"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "ruamel.yaml",
+]
+[project.urls]
+Homepage = "https://github.com/kiliantyler/trunk-yls"
+Issues = "https://github.com/kiliantyler/trunk-yls/issues"
+[project.scripts]
+trunk-yls = "yls-check:main"
