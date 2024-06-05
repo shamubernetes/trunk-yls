@@ -1,11 +1,26 @@
 # yaml-language-server: $schema=https://static.trunk.io/pub/trunk-yaml-schema.json
 version: 0.1
+tools:
+  definitions:
+  - name: trunk-yls
+    runtime: python
+    package: trunk-yls
+    shims: [trunk-yls]
+    known_good_version: 0.0.2
+  enabled:
+  - trunk-yls@0.0.2
 lint:
   definitions:
-  - name: yls-check
+  - name: trunk-yls
     files: [yaml]
-    description: A formatter yaml files
+    tools: [trunk-yls]
+    suggest_if: files_present
+    description: A security linter for Python
     commands:
-    - run: ${plugin}/yls-check.sh ${target}
-      success_codes: [0, 1]
+    - name: lint
       output: lsp_json
+      run: trunk-yls ${target}
+      success_codes: [0]
+      read_output_from: stdout
+      batch: false
+    known_good_version: 0.0.2
