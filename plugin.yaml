@@ -8,7 +8,7 @@ tools:
     shims: [trunk-yls]
     known_good_version: &version 1.0.1
   enabled:
-  - trunk-yls@0.0.4
+  - trunk-yls@1.0.1
 lint:
   definitions:
   - name: trunk-yls
