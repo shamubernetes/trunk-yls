@@ -6,9 +6,9 @@ tools:
     runtime: python
     package: trunk-yls
     shims: [trunk-yls]
-    known_good_version: &version 1.0.1
+    known_good_version: 1.0.2
   enabled:
-  - trunk-yls@1.0.1
+  - trunk-yls@1.0.2
 lint:
   definitions:
   - name: trunk-yls
@@ -23,6 +23,6 @@ lint:
       success_codes: [0]
       read_output_from: stdout
       batch: false
-    known_good_version: *version
+    known_good_version: 1.0.2
     direct_configs:
     - trunk-yls.yaml
